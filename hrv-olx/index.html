@@ -43,16 +43,36 @@
   .sw { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: middle; border: 1px solid rgba(0,0,0,.18); }
   a.ver { display: inline-block; padding: 5px 12px; background: #6a2c8f; color: #fff; text-decoration: none; border-radius: 7px; font-size: 12px; font-weight: 600; white-space: nowrap; }
   a.ver:hover { background: #57247a; }
+  .acts { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  button.act { font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 1px solid #d4d8dd; background: #fff; color: #5b6470; cursor: pointer; white-space: nowrap; }
+  button.act.sold:hover { background: #fff3e0; border-color: #e0a85b; color: #9a5b00; }
+  button.act.nope:hover { background: #f1f2f4; border-color: #c2c7cd; color: #3a4048; }
   .foot { color: #8a929c; font-size: 12px; margin-top: 16px; line-height: 1.6; }
   .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: #5b6470; margin-top: 8px; }
   .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
+  .disc-wrap { margin-top: 20px; }
+  button.disc-toggle { font-size: 13px; font-weight: 600; padding: 9px 13px; border: 1px solid #e6e8eb; border-radius: 9px; background: #fff; color: #5b6470; cursor: pointer; width: 100%; text-align: left; }
+  button.disc-toggle:hover { background: #fafbfc; }
+  .disc-list { background: #fff; border: 1px solid #e6e8eb; border-top: none; border-radius: 0 0 9px 9px; }
+  .disc-item { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 9px 13px; border-bottom: 1px solid #eef0f2; font-size: 13px; color: #5b6470; }
+  .disc-item:last-child { border-bottom: none; }
+  .disc-info { flex: 1 1 320px; }
+  .disc-info b { color: #1d2129; }
+  .disc-motivo { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px; white-space: nowrap; }
+  .m-vendido { background: #ffe0c2; color: #9a5b00; }
+  .m-naoint { background: #e9ebee; color: #5b6470; }
+  a.ver-sm { color: #6a2c8f; font-weight: 600; text-decoration: none; font-size: 12px; white-space: nowrap; }
+  a.ver-sm:hover { text-decoration: underline; }
+  button.act-restore { font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 1px solid #d4d8dd; background: #fff; color: #1f7a36; cursor: pointer; white-space: nowrap; }
+  button.act-restore:hover { background: #f0f9f1; border-color: #2e9c4a; }
+  .disc-empty { padding: 12px 13px; color: #8a929c; font-size: 13px; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <h1>Honda HR-V — busca OLX</h1>
-    <p class="sub">Advance ou Touring • 2024 a 2026 • até 50 mil km • R$ 130 mil a R$ 160 mil • AL, PE e SE</p>
+    <p class="sub">Advance ou Touring • 2024 a 2026 • até 50 mil km • R$ 130 mil a R$ 180 mil • AL, PE e SE</p>
     <p class="stamp" id="stamp"></p>
   </header>
 
@@ -94,21 +114,42 @@
     <span><span class="dot" style="background:#ffe7c2"></span>Novo desde a última atualização</span>
   </div>
 
+  <div class="disc-wrap">
+    <button class="disc-toggle" id="disc-toggle">Descartados (0) &#9662;</button>
+    <div class="disc-list" id="disc-list" hidden></div>
+  </div>
+
   <p class="foot">
     Atualizado automaticamente todo dia às 07h pela rotina <b>painel-hrv-olx</b>, que refaz a busca no OLX com esse mesmo filtro.<br>
     Os preços, a cor e a disponibilidade saem da página de cada anúncio; confira sempre no OLX antes de qualquer contato.<br>
-    Versões iguais com o mesmo km (ex.: Touring 2024, 31.429 km) costumam ser o mesmo carro anunciado por revendedores diferentes.
+    Versões iguais com o mesmo km (ex.: Touring 2024, 31.429 km) costumam ser o mesmo carro anunciado por revendedores diferentes.<br>
+    Descartar um anúncio (vendido ou sem interesse) o esconde da lista; a marcação fica salva neste navegador e é reaplicada a cada atualização. Use "Descartados" acima para rever ou restaurar.
   </p>
 </div>
 
 <script>
-const GENERATED_AT = "2026-06-30T10:09:47-03:00";
+const GENERATED_AT = "2026-06-30T11:17:38-03:00";
 const COLORS = { 'Preto':'#222222', 'Branco':'#ffffff', 'Prata':'#c7ccd1', 'Cinza':'#9aa0a6', 'Azul':'#2f6fed', 'Vermelho':'#d23b3b', 'Verde':'#2e9c4a', 'Amarelo':'#f1c40f', 'Vinho':'#7b1e2b', 'Marrom':'#8a5a44' };
 const DATA = [
   {uf:'PE', local:'Grande Recife', trim:'Advance', year:2026, km:3851, price:155990, cor:'Azul', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2026-1509703156'},
+  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2026, km:3851, price:175990, cor:'Cinza', isNew:true, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2026-1504890411'},
+  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2026, km:3851, price:175990, cor:'Cinza', isNew:true, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2026-1477370121'},
+  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2026, km:4000, price:175990, cor:'Azul', isNew:true, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2026-1503345862'},
+  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2026, km:4050, price:178000, cor:'Branco', isNew:true, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2026-1511019204'},
+  {uf:'SE', local:'Sergipe', trim:'Touring', year:2025, km:11000, price:176000, cor:'Azul', isNew:true, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1488154865'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:11687, price:164890, cor:'Azul', isNew:true, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1501461819'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:11687, price:164990, cor:'Azul', isNew:true, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1501458018'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:11689, price:164890, cor:'Azul', isNew:true, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1500484219'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:16500, price:164990, cor:'Azul', isNew:true, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1491684452'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:16500, price:168000, cor:'Azul', isNew:true, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1503995066'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:16500, price:169990, cor:'Azul', isNew:true, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1503996775'},
   {uf:'PE', local:'Grande Recife', trim:'Advance', year:2024, km:17544, price:146900, cor:'Cinza', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2024-1511513160'},
   {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:20600, price:159800, cor:'Cinza', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1495128546'},
+  {uf:'AL', local:'Alagoas', trim:'Touring', year:2025, km:21000, price:179990, cor:'Cinza', isNew:true, url:'https://al.olx.com.br/alagoas/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1512482487'},
+  {uf:'SE', local:'Sergipe', trim:'Touring', year:2025, km:23000, price:170000, cor:'Preto', isNew:true, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1504141656'},
+  {uf:'SE', local:'Sergipe', trim:'Touring', year:2025, km:23600, price:176900, cor:'Cinza', isNew:true, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1501701726'},
   {uf:'PE', local:'Petrolina/Garanhuns', trim:'Advance', year:2024, km:24579, price:154900, cor:'Preto', isNew:false, url:'https://pe.olx.com.br/regiao-de-petrolina-e-garanhuns/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2024-1505764408'},
+  {uf:'SE', local:'Sergipe', trim:'Touring', year:2025, km:25005, price:172900, cor:'Prata', isNew:true, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1471484462'},
   {uf:'PE', local:'Grande Recife', trim:'Advance', year:2024, km:26700, price:159880, cor:'Branco', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2024-1501705234'},
   {uf:'SE', local:'Sergipe', trim:'Touring', year:2024, km:27000, price:158500, cor:'Vermelho', isNew:false, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1511764242'},
   {uf:'PE', local:'Grande Recife', trim:'Advance', year:2025, km:30124, price:149950, cor:'Prata', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2025-1509389695'},
@@ -129,17 +170,79 @@ const DATA = [
 const fmtPrice = v => 'R$ ' + v.toLocaleString('pt-BR');
 const fmtKm = v => v.toLocaleString('pt-BR') + ' km';
 const corCell = c => {
-  if (!c) return '<span style="color:#8a929c">—</span>';
+  if (!c) return '<span style="color:#8a929c">&mdash;</span>';
   const hex = COLORS[c] || '#cccccc';
-  return `<span class="sw" style="background:${hex}"></span>${c}`;
+  return '<span class="sw" style="background:' + hex + '"></span>' + c;
 };
 let sortKey = 'km';
 
+// ---- Descarte (salvo neste navegador) ----
+const DISCARD_KEY = 'hrv_descartados_v1';
+const MOTIVO_LABEL = { vendido: 'Vendido', naoint: 'Não me interessa' };
+function idFromUrl(u) {
+  const parts = String(u).split('-');
+  const last = parts[parts.length - 1].replace(/[^0-9]/g, '');
+  return last || String(u);
+}
+function getDiscarded() {
+  try { return JSON.parse(localStorage.getItem(DISCARD_KEY)) || {}; } catch (e) { return {}; }
+}
+function setDiscarded(o) {
+  try { localStorage.setItem(DISCARD_KEY, JSON.stringify(o)); } catch (e) {}
+}
+function escAttr(s) { return String(s).split('"').join('&quot;'); }
+
+function discardAd(id, motivo) {
+  const d = DATA.find(function (x) { return idFromUrl(x.url) === id; });
+  const disc = getDiscarded();
+  disc[id] = {
+    motivo: motivo,
+    ts: Date.now(),
+    trim: d ? d.trim : '', year: d ? d.year : '', km: d ? d.km : null,
+    price: d ? d.price : null, cor: d ? d.cor : '', uf: d ? d.uf : '',
+    local: d ? d.local : '', url: d ? d.url : ''
+  };
+  setDiscarded(disc);
+  apply();
+}
+
+function restoreAd(id) {
+  const disc = getDiscarded();
+  delete disc[id];
+  setDiscarded(disc);
+  apply();
+}
+
+function renderDiscarded() {
+  const disc = getDiscarded();
+  const ids = Object.keys(disc).sort(function (a, b) { return (disc[b].ts || 0) - (disc[a].ts || 0); });
+  document.getElementById('disc-toggle').firstChild.nodeValue = 'Descartados (' + ids.length + ') ';
+  const box = document.getElementById('disc-list');
+  if (!ids.length) {
+    box.innerHTML = '<div class="disc-empty">Nenhum anúncio descartado ainda.</div>';
+    return;
+  }
+  box.innerHTML = ids.map(function (id) {
+    const e = disc[id];
+    const cls = e.motivo === 'vendido' ? 'm-vendido' : 'm-naoint';
+    const kmTxt = e.km != null ? fmtKm(e.km) : '—';
+    const prTxt = e.price != null ? fmtPrice(e.price) : '—';
+    const info = '<b>HR-V ' + e.trim + ' ' + e.year + '</b> &bull; ' + kmTxt + ' &bull; ' + (e.cor || '—') + ' &bull; ' + prTxt + ' &bull; ' + e.local + ' (' + e.uf + ')';
+    const link = e.url ? '<a class="ver-sm" href="' + escAttr(e.url) + '" target="_blank" rel="noopener">Ver no OLX</a>' : '';
+    return '<div class="disc-item">' +
+      '<span class="disc-info">' + info + '</span>' +
+      '<span class="disc-motivo ' + cls + '">' + (MOTIVO_LABEL[e.motivo] || 'Descartado') + '</span>' +
+      link +
+      '<button class="act-restore" data-id="' + id + '">Restaurar</button>' +
+      '</div>';
+  }).join('');
+}
+
 // preencher o filtro de cor
-(() => {
+(function () {
   const sel = document.getElementById('f-cor');
-  [...new Set(DATA.map(d => d.cor).filter(Boolean))].sort()
-    .forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o); });
+  [...new Set(DATA.map(function (d) { return d.cor; }).filter(Boolean))].sort()
+    .forEach(function (c) { const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o); });
 })();
 
 function apply() {
@@ -147,36 +250,66 @@ function apply() {
   const tr = document.getElementById('f-trim').value;
   const cor = document.getElementById('f-cor').value;
   const kmCap = document.getElementById('f-km').value;
-  let rows = DATA.filter(d =>
-    (!uf || d.uf === uf) && (!tr || d.trim === tr) && (!cor || d.cor === cor) && (!kmCap || d.km <= +kmCap));
-  rows.sort((a, b) => sortKey === 'year' ? b.year - a.year : a[sortKey] - b[sortKey]);
+  const disc = getDiscarded();
+  let rows = DATA.filter(function (d) {
+    return !disc[idFromUrl(d.url)] &&
+      (!uf || d.uf === uf) && (!tr || d.trim === tr) && (!cor || d.cor === cor) && (!kmCap || d.km <= +kmCap);
+  });
+  rows.sort(function (a, b) { return sortKey === 'year' ? b.year - a.year : a[sortKey] - b[sortKey]; });
 
   const tb = document.getElementById('rows');
-  tb.innerHTML = rows.map(d => {
+  tb.innerHTML = rows.map(function (d) {
+    const id = idFromUrl(d.url);
     const pref = d.km <= 20000;
-    const badges = (pref ? '<span class="badge b-pref">≤20 mil</span>' : '')
+    const badges = (pref ? '<span class="badge b-pref">&le;20 mil</span>' : '')
       + (d.isNew ? '<span class="badge b-new">novo</span>' : '');
-    return `<tr class="${pref ? 'pref' : ''}">
-      <td><span class="trim">HR-V ${d.trim}</span> ${d.year}${badges}</td>
-      <td class="km">${fmtKm(d.km)}</td>
-      <td class="cor">${corCell(d.cor)}</td>
-      <td class="price">${fmtPrice(d.price)}</td>
-      <td>${d.local} <span style="color:#8a929c">(${d.uf})</span></td>
-      <td><a class="ver" href="${d.url}" target="_blank" rel="noopener">Ver no OLX</a></td>
-    </tr>`;
+    return '<tr class="' + (pref ? 'pref' : '') + '">' +
+      '<td><span class="trim">HR-V ' + d.trim + '</span> ' + d.year + badges + '</td>' +
+      '<td class="km">' + fmtKm(d.km) + '</td>' +
+      '<td class="cor">' + corCell(d.cor) + '</td>' +
+      '<td class="price">' + fmtPrice(d.price) + '</td>' +
+      '<td>' + d.local + ' <span style="color:#8a929c">(' + d.uf + ')</span></td>' +
+      '<td><div class="acts">' +
+        '<a class="ver" href="' + d.url + '" target="_blank" rel="noopener">Ver no OLX</a>' +
+        '<button class="act sold" data-id="' + id + '" data-motivo="vendido" title="Marcar como já vendido">Vendido</button>' +
+        '<button class="act nope" data-id="' + id + '" data-motivo="naoint" title="Não tenho interesse">Não me interessa</button>' +
+      '</div></td>' +
+      '</tr>';
   }).join('');
 
   document.getElementById('c-total').textContent = rows.length;
-  document.getElementById('c-pref').textContent = rows.filter(d => d.km <= 20000).length;
-  document.getElementById('c-min').textContent = rows.length ? fmtPrice(Math.min(...rows.map(d => d.price))) : '—';
-  document.getElementById('c-minkm').textContent = rows.length ? fmtKm(Math.min(...rows.map(d => d.km))) : '—';
+  document.getElementById('c-pref').textContent = rows.filter(function (d) { return d.km <= 20000; }).length;
+  document.getElementById('c-min').textContent = rows.length ? fmtPrice(Math.min.apply(null, rows.map(function (d) { return d.price; }))) : '—';
+  document.getElementById('c-minkm').textContent = rows.length ? fmtKm(Math.min.apply(null, rows.map(function (d) { return d.km; }))) : '—';
+
+  renderDiscarded();
 }
 
-document.querySelectorAll('.sort').forEach(b => b.addEventListener('click', () => {
-  document.querySelectorAll('.sort').forEach(x => x.classList.remove('active'));
-  b.classList.add('active'); sortKey = b.dataset.k; apply();
-}));
-['f-uf', 'f-trim', 'f-cor', 'f-km'].forEach(id => document.getElementById(id).addEventListener('change', apply));
+document.querySelectorAll('.sort').forEach(function (b) {
+  b.addEventListener('click', function () {
+    document.querySelectorAll('.sort').forEach(function (x) { x.classList.remove('active'); });
+    b.classList.add('active'); sortKey = b.dataset.k; apply();
+  });
+});
+['f-uf', 'f-trim', 'f-cor', 'f-km'].forEach(function (id) {
+  document.getElementById(id).addEventListener('change', apply);
+});
+
+document.getElementById('rows').addEventListener('click', function (e) {
+  const btn = e.target.closest('button.act');
+  if (!btn) return;
+  discardAd(btn.dataset.id, btn.dataset.motivo);
+});
+
+document.getElementById('disc-list').addEventListener('click', function (e) {
+  const btn = e.target.closest('button.act-restore');
+  if (!btn) return;
+  restoreAd(btn.dataset.id);
+});
+document.getElementById('disc-toggle').addEventListener('click', function () {
+  const box = document.getElementById('disc-list');
+  box.hidden = !box.hidden;
+});
 
 const dt = new Date(GENERATED_AT);
 document.getElementById('stamp').textContent = 'Última atualização: ' +
