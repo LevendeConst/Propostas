@@ -66,6 +66,18 @@
   button.act-restore { font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 1px solid #d4d8dd; background: #fff; color: #1f7a36; cursor: pointer; white-space: nowrap; }
   button.act-restore:hover { background: #f0f9f1; border-color: #2e9c4a; }
   .disc-empty { padding: 12px 13px; color: #8a929c; font-size: 13px; }
+  .fav-wrap { margin: 16px 0 4px; border: 1px solid #f0d48a; background: #fffdf5; border-radius: 10px; overflow: hidden; }
+  .fav-head { padding: 10px 14px; font-weight: 700; font-size: 14px; color: #8a6d1a; background: #fdf6e3; border-bottom: 1px solid #f0d48a; }
+  .fav-count { font-weight: 600; color: #b08a2e; font-size: 12px; }
+  .fav-item { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 10px 14px; border-bottom: 1px solid #f3e7c4; font-size: 13px; }
+  .fav-item:last-child { border-bottom: none; }
+  .fav-star { color: #e6b422; font-size: 15px; }
+  .fav-info { flex: 1 1 320px; color: #5b6470; }
+  .fav-info b { color: #1d2129; }
+  button.star { font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 1px solid #ecd591; background: #fffdf5; color: #b08a2e; cursor: pointer; white-space: nowrap; }
+  button.star:hover { background: #fdf6e3; border-color: #e6b422; color: #8a6d1a; }
+  button.act-unfav { font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 1px solid #ecd591; background: #fff; color: #b08a2e; cursor: pointer; white-space: nowrap; }
+  button.act-unfav:hover { background: #fdf6e3; border-color: #e6b422; }
 </style>
 </head>
 <body>
@@ -81,6 +93,11 @@
     <div class="card"><div class="n" id="c-pref">0</div><div class="l">até 20 mil km</div></div>
     <div class="card"><div class="n" id="c-min">—</div><div class="l">menor preço</div></div>
     <div class="card"><div class="n" id="c-minkm">—</div><div class="l">menor km</div></div>
+  </div>
+
+  <div class="fav-wrap" id="fav-wrap" hidden>
+    <div class="fav-head">&#9733; Preferidos <span class="fav-count" id="fav-count"></span></div>
+    <div class="fav-list" id="fav-list"></div>
   </div>
 
   <div class="controls">
@@ -123,7 +140,7 @@
     Atualizado automaticamente todo dia às 07h pela rotina <b>painel-hrv-olx</b>, que refaz a busca no OLX com esse mesmo filtro.<br>
     Os preços, a cor e a disponibilidade saem da página de cada anúncio; confira sempre no OLX antes de qualquer contato.<br>
     Versões iguais com o mesmo km (ex.: Touring 2024, 31.429 km) costumam ser o mesmo carro anunciado por revendedores diferentes.<br>
-    Descartar um anúncio (vendido ou sem interesse) o esconde da lista; a marcação fica salva neste navegador e é reaplicada a cada atualização. Use "Descartados" acima para rever ou restaurar.
+    Marque um anúncio como <b>Preferido</b> para destacá-lo no topo; descarte (vendido ou sem interesse) para escondê-lo. As marcações ficam salvas neste navegador e são reaplicadas a cada atualização.
   </p>
 </div>
 
@@ -200,6 +217,8 @@ function discardAd(id, motivo) {
     price: d ? d.price : null, cor: d ? d.cor : '', uf: d ? d.uf : '',
     local: d ? d.local : '', url: d ? d.url : ''
   };
+  const favs = getFavs();
+  if (favs[id]) { delete favs[id]; setFavs(favs); }
   setDiscarded(disc);
   apply();
 }
@@ -236,6 +255,64 @@ function renderDiscarded() {
   }).join('');
 }
 
+// ---- Preferidos (salvo neste navegador) ----
+const FAV_KEY = 'hrv_preferidos_v1';
+function getFavs() {
+  try { return JSON.parse(localStorage.getItem(FAV_KEY)) || {}; } catch (e) { return {}; }
+}
+function setFavs(o) {
+  try { localStorage.setItem(FAV_KEY, JSON.stringify(o)); } catch (e) {}
+}
+function toggleFav(id) {
+  const favs = getFavs();
+  if (favs[id]) {
+    delete favs[id];
+  } else {
+    const d = DATA.find(function (x) { return idFromUrl(x.url) === id; });
+    favs[id] = {
+      ts: Date.now(),
+      trim: d ? d.trim : '', year: d ? d.year : '', km: d ? d.km : null,
+      price: d ? d.price : null, cor: d ? d.cor : '', uf: d ? d.uf : '',
+      local: d ? d.local : '', url: d ? d.url : ''
+    };
+    const disc = getDiscarded();
+    if (disc[id]) { delete disc[id]; setDiscarded(disc); }
+  }
+  setFavs(favs);
+  apply();
+}
+function renderFavoritos() {
+  const favs = getFavs();
+  const ids = Object.keys(favs);
+  const wrap = document.getElementById('fav-wrap');
+  if (!ids.length) {
+    wrap.hidden = true;
+    document.getElementById('fav-list').innerHTML = '';
+    document.getElementById('fav-count').textContent = '';
+    return;
+  }
+  wrap.hidden = false;
+  document.getElementById('fav-count').textContent = '(' + ids.length + ')';
+  const items = ids.map(function (id) {
+    const fresh = DATA.find(function (x) { return idFromUrl(x.url) === id; });
+    const e = fresh || favs[id];
+    return { id: id, trim: e.trim, year: e.year, km: e.km, price: e.price, cor: e.cor, uf: e.uf, local: e.local, url: e.url };
+  });
+  items.sort(function (a, b) { return (a.km || 0) - (b.km || 0); });
+  document.getElementById('fav-list').innerHTML = items.map(function (d) {
+    const kmTxt = d.km != null ? fmtKm(d.km) : '—';
+    const prTxt = d.price != null ? fmtPrice(d.price) : '—';
+    const info = '<b>HR-V ' + d.trim + ' ' + d.year + '</b> &bull; ' + kmTxt + ' &bull; ' + corCell(d.cor) + ' &bull; <span class="price">' + prTxt + '</span> &bull; ' + d.local + ' (' + d.uf + ')';
+    const link = d.url ? '<a class="ver" href="' + escAttr(d.url) + '" target="_blank" rel="noopener">Ver no OLX</a>' : '';
+    return '<div class="fav-item">' +
+      '<span class="fav-star">&#9733;</span>' +
+      '<span class="fav-info">' + info + '</span>' +
+      link +
+      '<button class="act-unfav" data-id="' + d.id + '" title="Remover dos preferidos">Remover</button>' +
+      '</div>';
+  }).join('');
+}
+
 // preencher o filtro de cor
 (function () {
   const sel = document.getElementById('f-cor');
@@ -249,10 +326,12 @@ function apply() {
   const cor = document.getElementById('f-cor').value;
   const kmCap = document.getElementById('f-km').value;
   const disc = getDiscarded();
-  let rows = DATA.filter(function (d) {
+  const favs = getFavs();
+  let matching = DATA.filter(function (d) {
     return !disc[idFromUrl(d.url)] &&
       (!uf || d.uf === uf) && (!tr || d.trim === tr) && (!cor || d.cor === cor) && (!kmCap || d.km <= +kmCap);
   });
+  let rows = matching.filter(function (d) { return !favs[idFromUrl(d.url)]; });
   rows.sort(function (a, b) { return sortKey === 'year' ? b.year - a.year : a[sortKey] - b[sortKey]; });
 
   const tb = document.getElementById('rows');
@@ -269,17 +348,19 @@ function apply() {
       '<td>' + d.local + ' <span style="color:#8a929c">(' + d.uf + ')</span></td>' +
       '<td><div class="acts">' +
         '<a class="ver" href="' + d.url + '" target="_blank" rel="noopener">Ver no OLX</a>' +
+        '<button class="star" data-id="' + id + '" title="Marcar como preferido">&#9734; Preferir</button>' +
         '<button class="act sold" data-id="' + id + '" data-motivo="vendido" title="Marcar como já vendido">Vendido</button>' +
         '<button class="act nope" data-id="' + id + '" data-motivo="naoint" title="Não tenho interesse">Não me interessa</button>' +
       '</div></td>' +
       '</tr>';
   }).join('');
 
-  document.getElementById('c-total').textContent = rows.length;
-  document.getElementById('c-pref').textContent = rows.filter(function (d) { return d.km <= 20000; }).length;
-  document.getElementById('c-min').textContent = rows.length ? fmtPrice(Math.min.apply(null, rows.map(function (d) { return d.price; }))) : '—';
-  document.getElementById('c-minkm').textContent = rows.length ? fmtKm(Math.min.apply(null, rows.map(function (d) { return d.km; }))) : '—';
+  document.getElementById('c-total').textContent = matching.length;
+  document.getElementById('c-pref').textContent = matching.filter(function (d) { return d.km <= 20000; }).length;
+  document.getElementById('c-min').textContent = matching.length ? fmtPrice(Math.min.apply(null, matching.map(function (d) { return d.price; }))) : '—';
+  document.getElementById('c-minkm').textContent = matching.length ? fmtKm(Math.min.apply(null, matching.map(function (d) { return d.km; }))) : '—';
 
+  renderFavoritos();
   renderDiscarded();
 }
 
@@ -293,11 +374,20 @@ document.querySelectorAll('.sort').forEach(function (b) {
   document.getElementById(id).addEventListener('change', apply);
 });
 
-// descartar (delegação no corpo da tabela)
+// preferir + descartar (delegação no corpo da tabela)
 document.getElementById('rows').addEventListener('click', function (e) {
+  const star = e.target.closest('button.star');
+  if (star) { toggleFav(star.dataset.id); return; }
   const btn = e.target.closest('button.act');
   if (!btn) return;
   discardAd(btn.dataset.id, btn.dataset.motivo);
+});
+
+// remover dos preferidos
+document.getElementById('fav-list').addEventListener('click', function (e) {
+  const btn = e.target.closest('button.act-unfav');
+  if (!btn) return;
+  toggleFav(btn.dataset.id);
 });
 
 // restaurar + abrir/fechar a seção de descartados
