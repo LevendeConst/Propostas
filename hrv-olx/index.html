@@ -233,7 +233,7 @@
     <span id="foot-fipe"></span><br>
     Anúncios com a mesma versão, ano, km e cor são tratados como o mesmo carro (revendedores diferentes) e aparecem agrupados: o preço mostrado é o menor, e "+N anúncios" abre os demais.<br>
     "No painel há N dias" conta a partir de 02/07/2026 (início do histórico); anúncios que já estavam no painel antes dessa data ficam sem contagem. A queda de preço compara com o último preço registrado pela rotina.<br>
-    Marque um anúncio como <b>Preferido</b> (&#9734;) para destacá-lo no topo; <b>Vendido</b> e <b>Dispensar</b> escondem o anúncio (ficam na seção Descartados, com restauro). As marcações ficam salvas neste navegador e são reaplicadas a cada atualização. Preferido que sair do OLX ganha o aviso <b>fora do ar</b>.
+    Marque um anúncio como <b>Preferido</b> (&#9734;) para destacá-lo no topo; <b>Vendido</b> e <b>Dispensar</b> escondem o anúncio (ficam na seção Descartados, com restauro). As marcações valem na hora neste navegador; todo dia às 07h a rotina copia as marcações feitas no Chrome do computador pro painel publicado, e os outros aparelhos herdam (com até 1 dia de defasagem). Desfazer em outro aparelho vale só naquele aparelho. Preferido que sair do OLX ganha o aviso <b>fora do ar</b>.
   </p>
 </div>
 
@@ -277,6 +277,10 @@ const DATA = [
   {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:48801, price:145894, cor:'Prata', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1494529310'},
   {uf:'PE', local:'Grande Recife', trim:'Advance', year:2025, km:50000, price:149990, cor:'Azul', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2025-1502747537'},
 ];
+
+// Estado de fábrica: marcações espelhadas do Chrome do PC pela rotina diária.
+// O localStorage local complementa (e pode desfazer: valor false = removido neste aparelho).
+const BAKED = {favs:{}, disc:{}};
 
 const fmtPrice = v => 'R$ ' + v.toLocaleString('pt-BR');
 const fmtKm = v => v.toLocaleString('pt-BR') + ' km';
@@ -329,34 +333,45 @@ function idFromUrl(u) {
   const last = parts[parts.length - 1].replace(/[^0-9]/g, '');
   return last || String(u);
 }
-function getDiscarded() {
-  try { return JSON.parse(localStorage.getItem(DISCARD_KEY)) || {}; } catch (e) { return {}; }
+function rawStore(key) {
+  try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { return {}; }
 }
-function setDiscarded(o) {
-  try { localStorage.setItem(DISCARD_KEY, JSON.stringify(o)); } catch (e) {}
+function saveStore(key, o) {
+  try { localStorage.setItem(key, JSON.stringify(o)); } catch (e) {}
 }
+function mergeStore(baked, key) {
+  const loc = rawStore(key);
+  const out = {};
+  Object.keys(baked).forEach(function (id) { out[id] = baked[id]; });
+  Object.keys(loc).forEach(function (id) { if (loc[id] === false) { delete out[id]; } else { out[id] = loc[id]; } });
+  return out;
+}
+function getDiscarded() { return mergeStore(BAKED.disc, DISCARD_KEY); }
 function escAttr(s) { return String(s).split('"').join('&quot;'); }
 
 function discardAd(id, motivo) {
   const d = DATA.find(function (x) { return idFromUrl(x.url) === id; });
-  const disc = getDiscarded();
-  disc[id] = {
+  const loc = rawStore(DISCARD_KEY);
+  loc[id] = {
     motivo: motivo,
     ts: Date.now(),
     trim: d ? d.trim : '', year: d ? d.year : '', km: d ? d.km : null,
     price: d ? d.price : null, cor: d ? d.cor : '', uf: d ? d.uf : '',
     local: d ? d.local : '', url: d ? d.url : ''
   };
-  const favs = getFavs();
-  if (favs[id]) { delete favs[id]; setFavs(favs); }
-  setDiscarded(disc);
+  saveStore(DISCARD_KEY, loc);
+  if (getFavs()[id]) {
+    const lf = rawStore(FAV_KEY);
+    if (BAKED.favs[id]) { lf[id] = false; } else { delete lf[id]; }
+    saveStore(FAV_KEY, lf);
+  }
   apply();
 }
 
 function restoreAd(id) {
-  const disc = getDiscarded();
-  delete disc[id];
-  setDiscarded(disc);
+  const loc = rawStore(DISCARD_KEY);
+  if (BAKED.disc[id]) { loc[id] = false; } else { delete loc[id]; }
+  saveStore(DISCARD_KEY, loc);
   apply();
 }
 
@@ -387,28 +402,27 @@ function renderDiscarded() {
 
 // ---- Preferidos (salvo neste navegador) ----
 const FAV_KEY = 'hrv_preferidos_v1';
-function getFavs() {
-  try { return JSON.parse(localStorage.getItem(FAV_KEY)) || {}; } catch (e) { return {}; }
-}
-function setFavs(o) {
-  try { localStorage.setItem(FAV_KEY, JSON.stringify(o)); } catch (e) {}
-}
+function getFavs() { return mergeStore(BAKED.favs, FAV_KEY); }
 function toggleFav(id) {
-  const favs = getFavs();
-  if (favs[id]) {
-    delete favs[id];
+  const eff = getFavs();
+  const loc = rawStore(FAV_KEY);
+  if (eff[id]) {
+    if (BAKED.favs[id]) { loc[id] = false; } else { delete loc[id]; }
   } else {
     const d = DATA.find(function (x) { return idFromUrl(x.url) === id; });
-    favs[id] = {
+    loc[id] = {
       ts: Date.now(),
       trim: d ? d.trim : '', year: d ? d.year : '', km: d ? d.km : null,
       price: d ? d.price : null, cor: d ? d.cor : '', uf: d ? d.uf : '',
       local: d ? d.local : '', url: d ? d.url : ''
     };
-    const disc = getDiscarded();
-    if (disc[id]) { delete disc[id]; setDiscarded(disc); }
+    if (getDiscarded()[id]) {
+      const ld = rawStore(DISCARD_KEY);
+      if (BAKED.disc[id]) { ld[id] = false; } else { delete ld[id]; }
+      saveStore(DISCARD_KEY, ld);
+    }
   }
-  setFavs(favs);
+  saveStore(FAV_KEY, loc);
   apply();
 }
 function renderFavoritos() {
@@ -616,6 +630,11 @@ document.getElementById('disc-toggle').addEventListener('click', function () {
   box.hidden = !box.hidden;
   document.getElementById('disc-toggle').classList.toggle('open', !box.hidden);
 });
+
+// export pra rotina diária (espelha as marcações do Chrome do PC pro painel publicado)
+window.exportMarks = function () {
+  return JSON.stringify({ favs: getFavs(), disc: getDiscarded() });
+};
 
 // carimbo + semáforo de frescor
 (function () {
