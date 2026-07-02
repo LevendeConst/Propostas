@@ -12,14 +12,16 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 14px; line-height: 1.45;
   }
-  .wrap { max-width: 1040px; margin: 0 auto; padding: 20px 16px 48px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 20px 16px 48px; }
   header h1 { font-size: 20px; margin: 0 0 4px; }
   .sub { color: #5b6470; font-size: 13px; margin: 0 0 2px; }
   .stamp { color: #8a929c; font-size: 12px; }
   .cards { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 8px; }
-  .card { background: #fff; border: 1px solid #e6e8eb; border-radius: 10px; padding: 12px 14px; flex: 1 1 150px; }
+  .card { background: #fff; border: 1px solid #e6e8eb; border-radius: 10px; padding: 12px 14px; flex: 1 1 140px; }
   .card .n { font-size: 22px; font-weight: 700; }
   .card .l { font-size: 12px; color: #5b6470; }
+  .card .n small { font-size: 13px; font-weight: 600; color: #5b6470; }
+  .n.good { color: #1f7a36; }
   .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 14px 0 6px; }
   .controls label { font-size: 12px; color: #5b6470; margin-right: 4px; }
   select, button.sort {
@@ -28,19 +30,35 @@
   }
   button.sort.active { background: #1d2129; color: #fff; border-color: #1d2129; }
   table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; margin-top: 8px; border: 1px solid #e6e8eb; }
-  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eef0f2; font-size: 13px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eef0f2; font-size: 13px; vertical-align: top; }
   th { background: #fafbfc; color: #5b6470; font-weight: 600; font-size: 12px; }
   tr:last-child td { border-bottom: none; }
   tr.pref { background: #f0f9f1; }
   tr.pref td:first-child { box-shadow: inset 3px 0 0 #2e9c4a; }
+  tr.sub-row { background: #fafbfc; }
+  tr.sub-row td:first-child { padding-left: 26px; }
   .trim { font-weight: 600; }
   .badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px; margin-left: 6px; vertical-align: middle; }
   .b-pref { background: #d8f0dd; color: #1f7a36; }
   .b-new { background: #ffe7c2; color: #9a5b00; }
+  .b-off { background: #fde0e0; color: #a12a2a; }
   .price { font-weight: 700; white-space: nowrap; }
+  .apartir { font-size: 11px; font-weight: 600; color: #8a929c; display: block; }
   .km { white-space: nowrap; }
   .cor { white-space: nowrap; }
   .sw { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: middle; border: 1px solid rgba(0,0,0,.18); }
+  .meta { font-size: 11px; color: #8a929c; margin-top: 2px; }
+  .chip { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 6px; margin-top: 3px; white-space: nowrap; }
+  .chip.drop { background: #d8f0dd; color: #1f7a36; }
+  .chip.rise { background: #fdeaea; color: #a12a2a; }
+  .chip.grp { background: #eef0f2; color: #3a4048; cursor: pointer; border: 1px solid #d4d8dd; }
+  .chip.grp:hover { background: #e3e6ea; }
+  .fx { font-weight: 700; white-space: nowrap; }
+  .fx-good { color: #1f7a36; }
+  .fx-mid { color: #4d9e63; }
+  .fx-neu { color: #5b6470; font-weight: 600; }
+  .fx-bad { color: #b3541e; }
+  .fxsub { font-size: 11px; color: #8a929c; margin-top: 2px; white-space: nowrap; }
   a.ver { display: inline-block; padding: 5px 12px; background: #6a2c8f; color: #fff; text-decoration: none; border-radius: 7px; font-size: 12px; font-weight: 600; white-space: nowrap; }
   a.ver:hover { background: #57247a; }
   .acts { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
@@ -53,6 +71,8 @@
   .disc-wrap { margin-top: 20px; }
   button.disc-toggle { font-size: 13px; font-weight: 600; padding: 9px 13px; border: 1px solid #e6e8eb; border-radius: 9px; background: #fff; color: #5b6470; cursor: pointer; width: 100%; text-align: left; }
   button.disc-toggle:hover { background: #fafbfc; }
+  button.disc-toggle .caret { float: right; transition: transform .15s; }
+  button.disc-toggle.open .caret { transform: rotate(180deg); }
   .disc-list { background: #fff; border: 1px solid #e6e8eb; border-top: none; border-radius: 0 0 9px 9px; }
   .disc-item { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 9px 13px; border-bottom: 1px solid #eef0f2; font-size: 13px; color: #5b6470; }
   .disc-item:last-child { border-bottom: none; }
@@ -78,6 +98,23 @@
   button.star:hover { background: #fdf6e3; border-color: #e6b422; color: #8a6d1a; }
   button.act-unfav { font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 1px solid #ecd591; background: #fff; color: #b08a2e; cursor: pointer; white-space: nowrap; }
   button.act-unfav:hover { background: #fdf6e3; border-color: #e6b422; }
+  /* ---- celular: tabela vira cards ---- */
+  @media (max-width: 700px) {
+    table { display: block; background: transparent; border: none; }
+    thead { display: none; }
+    tbody { display: block; }
+    tr { display: block; background: #fff; border: 1px solid #e6e8eb; border-radius: 10px; margin-bottom: 10px; padding: 8px 12px; }
+    tr.pref { box-shadow: inset 3px 0 0 #2e9c4a; }
+    tr.pref td:first-child { box-shadow: none; }
+    tr.sub-row { margin: -4px 0 10px 14px; background: #fafbfc; }
+    tr.sub-row td:first-child { padding-left: 2px; }
+    td { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border: none; padding: 4px 2px; }
+    td::before { content: attr(data-l); color: #8a929c; font-size: 11px; font-weight: 600; flex: 0 0 auto; }
+    td[data-l=""]::before, td:first-child::before { display: none; }
+    td:first-child { display: block; border-bottom: 1px solid #eef0f2; padding-bottom: 6px; margin-bottom: 2px; }
+    td.c-acts { display: block; border-top: 1px solid #eef0f2; padding-top: 8px; margin-top: 2px; }
+    td .fxsub { margin-top: 0; }
+  }
 </style>
 </head>
 <body>
@@ -89,10 +126,11 @@
   </header>
 
   <div class="cards">
-    <div class="card"><div class="n" id="c-total">0</div><div class="l">anúncios no filtro</div></div>
+    <div class="card"><div class="n" id="c-total">0</div><div class="l" id="c-total-l">carros no filtro</div></div>
     <div class="card"><div class="n" id="c-pref">0</div><div class="l">até 20 mil km</div></div>
     <div class="card"><div class="n" id="c-min">—</div><div class="l">menor preço</div></div>
     <div class="card"><div class="n" id="c-minkm">—</div><div class="l">menor km</div></div>
+    <div class="card"><div class="n good" id="c-fipe">—</div><div class="l" id="c-fipe-l">melhor preço vs FIPE</div></div>
   </div>
 
   <div class="fav-wrap" id="fav-wrap" hidden>
@@ -118,65 +156,76 @@
       <button class="sort active" data-k="km">KM</button>
       <button class="sort" data-k="price">Preço</button>
       <button class="sort" data-k="year">Ano</button>
+      <button class="sort" data-k="fipe">vs FIPE</button>
     </span>
   </div>
 
   <table>
-    <thead><tr><th>Versão / Ano</th><th>KM</th><th>Cor</th><th>Preço</th><th>Local</th><th></th></tr></thead>
+    <thead><tr><th>Versão / Ano</th><th>KM</th><th>Cor</th><th>Preço</th><th>vs FIPE</th><th>Local</th><th></th></tr></thead>
     <tbody id="rows"></tbody>
   </table>
 
   <div class="legend">
     <span><span class="dot" style="background:#2e9c4a"></span>Preferência: até 20 mil km</span>
-    <span><span class="dot" style="background:#ffe7c2"></span>Novo desde a última atualização</span>
+    <span><span class="dot" style="background:#ffe7c2"></span>Novo (entrou há menos de 2 dias)</span>
+    <span><span class="dot" style="background:#d8f0dd"></span>&#8595; preço baixou desde a rodada anterior</span>
+    <span><span class="dot" style="background:#eef0f2"></span>+N anúncios: mesmo carro em mais de um anúncio (toque para abrir)</span>
   </div>
 
   <div class="disc-wrap">
-    <button class="disc-toggle" id="disc-toggle">Descartados (0) &#9662;</button>
+    <button class="disc-toggle" id="disc-toggle"><span id="disc-count">Descartados (0)</span><span class="caret">&#9662;</span></button>
     <div class="disc-list" id="disc-list" hidden></div>
   </div>
 
-  <p class="foot">
+  <p class="foot" id="foot">
     Atualizado automaticamente todo dia às 07h pela rotina <b>painel-hrv-olx</b>, que refaz a busca no OLX com esse mesmo filtro.<br>
     Os preços, a cor e a disponibilidade saem da página de cada anúncio; confira sempre no OLX antes de qualquer contato.<br>
-    Versões iguais com o mesmo km (ex.: Touring 2024, 31.429 km) costumam ser o mesmo carro anunciado por revendedores diferentes.<br>
-    Marque um anúncio como <b>Preferido</b> para destacá-lo no topo; descarte (vendido ou sem interesse) para escondê-lo. As marcações ficam salvas neste navegador e são reaplicadas a cada atualização.
+    <span id="foot-fipe"></span><br>
+    Anúncios com a mesma versão, ano, km e cor são tratados como o mesmo carro (revendedores diferentes) e aparecem agrupados: o preço mostrado é o menor, e "+N anúncios" abre os demais.<br>
+    "No painel há N dias" conta a partir de 02/07/2026 (início do histórico); anúncios que já estavam no painel antes dessa data ficam sem contagem. A queda de preço compara com o último preço registrado pela rotina.<br>
+    Marque um anúncio como <b>Preferido</b> para destacá-lo no topo; descarte (vendido ou sem interesse) para escondê-lo. As marcações ficam salvas neste navegador e são reaplicadas a cada atualização. Preferido que sair do OLX ganha o aviso <b>fora do ar</b>.
   </p>
 </div>
 
 <script>
 const GENERATED_AT = "2026-07-02T07:05:37-03:00";
 const COLORS = { 'Preto':'#222222', 'Branco':'#ffffff', 'Prata':'#c7ccd1', 'Cinza':'#9aa0a6', 'Azul':'#2f6fed', 'Vermelho':'#d23b3b', 'Verde':'#2e9c4a', 'Amarelo':'#f1c40f', 'Vinho':'#7b1e2b', 'Marrom':'#8a5a44' };
+// Tabela FIPE do mês de referência (a rotina atualiza na virada do mês).
+const FIPE = { ref:'Jul/2026', fonte:'Mobiauto (códigos FIPE 014111-9 Advance, 014102-0 Touring)',
+  'Advance-2024':152889, 'Advance-2025':158639, 'Advance-2026':179341,
+  'Touring-2024':158671, 'Touring-2025':169290, 'Touring-2026':189426 };
+// first: 1ª vez que a rotina viu o anúncio (null = já estava antes de 02/07/2026, entrada desconhecida)
+// prev/prevD: último preço diferente registrado e a data em que o preço atual passou a valer (null = sem mudança registrada)
 const DATA = [
-  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2026, km:3851, price:155990, cor:'Azul', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2026-1509703156'},
-  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2026, km:3851, price:175990, cor:'Cinza', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2026-1504890411'},
-  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2026, km:4000, price:175990, cor:'Azul', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2026-1503345862'},
-  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2026, km:4050, price:178000, cor:'Branco', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2026-1511019204'},
-  {uf:'SE', local:'Sergipe', trim:'Touring', year:2025, km:11000, price:176000, cor:'Azul', isNew:false, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1488154865'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:11689, price:164890, cor:'Azul', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1500484219'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:16500, price:164990, cor:'Azul', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1491684452'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:16500, price:168000, cor:'Azul', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1503995066'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:16500, price:169990, cor:'Azul', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1503996775'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:20600, price:159800, cor:'Cinza', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1495128546'},
-  {uf:'SE', local:'Sergipe', trim:'Touring', year:2025, km:23000, price:170000, cor:'Preto', isNew:false, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1504141656'},
-  {uf:'PE', local:'Petrolina/Garanhuns', trim:'Advance', year:2024, km:24579, price:154900, cor:'Preto', isNew:false, url:'https://pe.olx.com.br/regiao-de-petrolina-e-garanhuns/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2024-1505764408'},
-  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2025, km:25000, price:149000, cor:'Azul', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2025-1514404433'},
-  {uf:'SE', local:'Sergipe', trim:'Touring', year:2025, km:25005, price:172900, cor:'Prata', isNew:false, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1471484462'},
-  {uf:'SE', local:'Sergipe', trim:'Touring', year:2024, km:27000, price:156000, cor:'Vermelho', isNew:true, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1514695510'},
-  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2025, km:30124, price:149950, cor:'Prata', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2025-1509389695'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:31429, price:148990, cor:'Preto', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1507342155'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:31429, price:149890, cor:'Preto', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1504879163'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:31429, price:153890, cor:'Preto', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1499197432'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:34905, price:150900, cor:'Branco', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1509472421'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:38000, price:154900, cor:'Prata', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1425619897'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:38727, price:154900, cor:'Prata', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1513589548'},
-  {uf:'SE', local:'Sergipe', trim:'Advance', year:2025, km:41800, price:155000, cor:'Cinza', isNew:false, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2025-1508489982'},
-  {uf:'SE', local:'Sergipe', trim:'Touring', year:2024, km:44000, price:159000, cor:'Preto', isNew:false, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1514584190'},
-  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2024, km:47753, price:141900, cor:'Prata', isNew:true, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2024-1514692098'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:48000, price:145890, cor:'Prata', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1511620542'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:48000, price:147990, cor:'Azul', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1501699759'},
-  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:48801, price:145894, cor:'Prata', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1494529310'},
-  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2025, km:50000, price:149990, cor:'Azul', isNew:false, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2025-1502747537'},
+  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2026, km:3851, price:155990, cor:'Azul', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2026-1509703156'},
+  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2026, km:3851, price:175990, cor:'Cinza', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2026-1504890411'},
+  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2026, km:4000, price:175990, cor:'Azul', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2026-1503345862'},
+  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2026, km:4050, price:178000, cor:'Branco', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2026-1511019204'},
+  {uf:'SE', local:'Sergipe', trim:'Touring', year:2025, km:11000, price:176000, cor:'Azul', first:null, prev:null, prevD:null, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1488154865'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:11689, price:164890, cor:'Azul', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1500484219'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:16500, price:164990, cor:'Azul', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1491684452'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:16500, price:168000, cor:'Azul', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1503995066'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:16500, price:169990, cor:'Azul', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1503996775'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:20600, price:159800, cor:'Cinza', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1495128546'},
+  {uf:'SE', local:'Sergipe', trim:'Touring', year:2025, km:23000, price:170000, cor:'Preto', first:null, prev:null, prevD:null, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1504141656'},
+  {uf:'PE', local:'Petrolina/Garanhuns', trim:'Advance', year:2024, km:24579, price:154900, cor:'Preto', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/regiao-de-petrolina-e-garanhuns/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2024-1505764408'},
+  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2025, km:25000, price:149000, cor:'Azul', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2025-1514404433'},
+  {uf:'SE', local:'Sergipe', trim:'Touring', year:2025, km:25005, price:172900, cor:'Prata', first:null, prev:null, prevD:null, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1471484462'},
+  {uf:'SE', local:'Sergipe', trim:'Touring', year:2024, km:27000, price:156000, cor:'Vermelho', first:'2026-07-02', prev:null, prevD:null, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1514695510'},
+  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2025, km:30124, price:149950, cor:'Prata', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2025-1509389695'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:31429, price:148990, cor:'Preto', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1507342155'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:31429, price:149890, cor:'Preto', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1504879163'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:31429, price:153890, cor:'Preto', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1499197432'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:34905, price:150900, cor:'Branco', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1509472421'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:38000, price:154900, cor:'Prata', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1425619897'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:38727, price:154900, cor:'Prata', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1513589548'},
+  {uf:'SE', local:'Sergipe', trim:'Advance', year:2025, km:41800, price:155000, cor:'Cinza', first:null, prev:null, prevD:null, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2025-1508489982'},
+  {uf:'SE', local:'Sergipe', trim:'Touring', year:2024, km:44000, price:159000, cor:'Preto', first:null, prev:null, prevD:null, url:'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1514584190'},
+  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2024, km:47753, price:141900, cor:'Prata', first:'2026-07-02', prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2024-1514692098'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:48000, price:145890, cor:'Prata', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1511620542'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2025, km:48000, price:147990, cor:'Azul', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2025-1501699759'},
+  {uf:'PE', local:'Grande Recife', trim:'Touring', year:2024, km:48801, price:145894, cor:'Prata', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-touring-1-5-tb-16v-5p-aut-2024-1494529310'},
+  {uf:'PE', local:'Grande Recife', trim:'Advance', year:2025, km:50000, price:149990, cor:'Azul', first:null, prev:null, prevD:null, url:'https://pe.olx.com.br/grande-recife/autos-e-pecas/carros-vans-e-utilitarios/honda-hr-v-advance-1-5-tb-16v-5p-aut-2025-1502747537'},
 ];
 
 const fmtPrice = v => 'R$ ' + v.toLocaleString('pt-BR');
@@ -187,6 +236,40 @@ const corCell = c => {
   return '<span class="sw" style="background:' + hex + '"></span>' + c;
 };
 let sortKey = 'km';
+const GEN_DAY = GENERATED_AT.slice(0, 10);
+
+function daysSince(d) {
+  if (!d) return null;
+  const a = new Date(d + 'T00:00:00'), b = new Date(GEN_DAY + 'T00:00:00');
+  return Math.round((b - a) / 86400000);
+}
+function isNewAd(d) { const n = daysSince(d.first); return n !== null && n < 2; }
+function diasTxt(d) {
+  const n = daysSince(d.first);
+  if (n === null) return '';
+  if (n === 0) return 'entrou hoje';
+  if (n === 1) return 'no painel há 1 dia';
+  return 'no painel há ' + n + ' dias';
+}
+function fipeOf(d) { return FIPE[d.trim + '-' + d.year] || null; }
+function fipePct(d) { const f = fipeOf(d); return f ? (d.price / f - 1) * 100 : null; }
+function fmtPct(p) {
+  const s = Math.abs(p).toFixed(1).replace('.', ',') + '%';
+  return (p < 0 ? '&minus;' : '+') + s;
+}
+function fipeCell(d) {
+  const p = fipePct(d);
+  if (p === null) return '<span style="color:#8a929c">&mdash;</span>';
+  const cls = p <= -10 ? 'fx-good' : (p <= -4 ? 'fx-mid' : (p <= 0 ? 'fx-neu' : 'fx-bad'));
+  return '<div class="fx ' + cls + '">' + fmtPct(p) + '</div><div class="fxsub">FIPE ' + fmtPrice(fipeOf(d)) + '</div>';
+}
+function dropChip(d) {
+  if (d.prev == null || d.prev === d.price) return '';
+  const diff = d.prev - d.price;
+  const dt = d.prevD ? ' em ' + d.prevD.slice(8, 10) + '/' + d.prevD.slice(5, 7) : '';
+  if (diff > 0) return '<span class="chip drop" title="Preço anterior: ' + fmtPrice(d.prev) + '">&#8595; ' + fmtPrice(diff) + dt + '</span>';
+  return '<span class="chip rise" title="Preço anterior: ' + fmtPrice(d.prev) + '">&#8593; ' + fmtPrice(-diff) + dt + '</span>';
+}
 
 // ---- Descarte (salvo neste navegador) ----
 const DISCARD_KEY = 'hrv_descartados_v1';
@@ -230,7 +313,7 @@ function restoreAd(id) {
 function renderDiscarded() {
   const disc = getDiscarded();
   const ids = Object.keys(disc).sort(function (a, b) { return (disc[b].ts || 0) - (disc[a].ts || 0); });
-  document.getElementById('disc-toggle').firstChild.nodeValue = 'Descartados (' + ids.length + ') ';
+  document.getElementById('disc-count').textContent = 'Descartados (' + ids.length + ')';
   const box = document.getElementById('disc-list');
   if (!ids.length) {
     box.innerHTML = '<div class="disc-empty">Nenhum anúncio descartado ainda.</div>';
@@ -293,13 +376,15 @@ function renderFavoritos() {
   const items = ids.map(function (id) {
     const fresh = DATA.find(function (x) { return idFromUrl(x.url) === id; });
     const e = fresh || favs[id];
-    return { id: id, trim: e.trim, year: e.year, km: e.km, price: e.price, cor: e.cor, uf: e.uf, local: e.local, url: e.url };
+    return { id: id, off: !fresh, d: fresh, trim: e.trim, year: e.year, km: e.km, price: e.price, cor: e.cor, uf: e.uf, local: e.local, url: e.url };
   });
   items.sort(function (a, b) { return (a.km || 0) - (b.km || 0); });
   document.getElementById('fav-list').innerHTML = items.map(function (d) {
     const kmTxt = d.km != null ? fmtKm(d.km) : '—';
     const prTxt = d.price != null ? fmtPrice(d.price) : '—';
-    const info = '<b>HR-V ' + d.trim + ' ' + d.year + '</b> &bull; ' + kmTxt + ' &bull; ' + corCell(d.cor) + ' &bull; <span class="price">' + prTxt + '</span> &bull; ' + d.local + ' (' + d.uf + ')';
+    const offBadge = d.off ? ' <span class="badge b-off" title="Este anúncio não apareceu na última busca — pode ter sido vendido ou retirado.">fora do ar</span>' : '';
+    const extra = d.d ? (dropChip(d.d) ? ' ' + dropChip(d.d) : '') : '';
+    const info = '<b>HR-V ' + d.trim + ' ' + d.year + '</b>' + offBadge + ' &bull; ' + kmTxt + ' &bull; ' + corCell(d.cor) + ' &bull; <span class="price">' + prTxt + '</span>' + extra + ' &bull; ' + d.local + ' (' + d.uf + ')';
     const link = d.url ? '<a class="ver" href="' + escAttr(d.url) + '" target="_blank" rel="noopener">Ver no OLX</a>' : '';
     return '<div class="fav-item">' +
       '<span class="fav-star">&#9733;</span>' +
@@ -317,6 +402,58 @@ function renderFavoritos() {
     .forEach(function (c) { const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o); });
 })();
 
+// ---- Agrupamento: mesma versão + ano + km + cor = mesmo carro ----
+const openGroups = {};
+function groupKey(d) { return d.trim + '|' + d.year + '|' + d.km + '|' + (d.cor || '?'); }
+function makeGroups(list) {
+  const map = {};
+  const order = [];
+  list.forEach(function (d) {
+    const k = groupKey(d);
+    if (!map[k]) { map[k] = []; order.push(k); }
+    map[k].push(d);
+  });
+  return order.map(function (k) {
+    const ads = map[k].slice().sort(function (a, b) { return a.price - b.price; });
+    return { key: k, ads: ads, best: ads[0] };
+  });
+}
+function sortVal(g, k) {
+  const d = g.best;
+  if (k === 'fipe') { const p = fipePct(d); return p === null ? 9999 : p; }
+  return d[k];
+}
+
+function adCells(d, isGroupBest, groupSize) {
+  const id = idFromUrl(d.url);
+  const pref = d.km <= 20000;
+  const badges = (pref ? '<span class="badge b-pref">&le;20 mil</span>' : '')
+    + (isNewAd(d) ? '<span class="badge b-new">novo</span>' : '');
+  const dias = diasTxt(d);
+  const grpChip = groupSize > 1
+    ? ' <span class="chip grp" data-g="' + escAttr(groupKey(d)) + '">' + (openGroups[groupKey(d)] ? '&minus; ' : '+ ') + (groupSize - 1) + ' anúncio' + (groupSize > 2 ? 's' : '') + '</span>'
+    : '';
+  const drop = dropChip(d);
+  return '<td data-l="">' +
+      '<span class="trim">HR-V ' + d.trim + '</span> ' + d.year + badges + grpChip +
+      (dias ? '<div class="meta">' + dias + '</div>' : '') +
+    '</td>' +
+    '<td class="km" data-l="KM">' + fmtKm(d.km) + '</td>' +
+    '<td class="cor" data-l="Cor">' + corCell(d.cor) + '</td>' +
+    '<td data-l="Preço"><span class="price">' + fmtPrice(d.price) + '</span>' +
+      (groupSize > 1 && isGroupBest ? '<span class="apartir">menor dos ' + groupSize + ' anúncios</span>' : '') +
+      (drop ? '<div>' + drop + '</div>' : '') +
+    '</td>' +
+    '<td data-l="vs FIPE">' + fipeCell(d) + '</td>' +
+    '<td data-l="Local">' + d.local + ' <span style="color:#8a929c">(' + d.uf + ')</span></td>' +
+    '<td class="c-acts" data-l=""><div class="acts">' +
+      '<a class="ver" href="' + escAttr(d.url) + '" target="_blank" rel="noopener">Ver no OLX</a>' +
+      '<button class="star" data-id="' + id + '" title="Marcar como preferido">&#9734; Preferir</button>' +
+      '<button class="act sold" data-id="' + id + '" data-motivo="vendido" title="Marcar como já vendido">Vendido</button>' +
+      '<button class="act nope" data-id="' + id + '" data-motivo="naoint" title="Não tenho interesse">Não me interessa</button>' +
+    '</div></td>';
+}
+
 function apply() {
   const uf = document.getElementById('f-uf').value;
   const tr = document.getElementById('f-trim').value;
@@ -325,4 +462,91 @@ function apply() {
   const disc = getDiscarded();
   const favs = getFavs();
   let matching = DATA.filter(function (d) {
-    retu
+    return !disc[idFromUrl(d.url)] &&
+      (!uf || d.uf === uf) && (!tr || d.trim === tr) && (!cor || d.cor === cor) && (!kmCap || d.km <= +kmCap);
+  });
+  const rowsAds = matching.filter(function (d) { return !favs[idFromUrl(d.url)]; });
+  let groups = makeGroups(rowsAds);
+  groups.sort(function (a, b) {
+    if (sortKey === 'year') return sortVal(b, 'year') - sortVal(a, 'year');
+    return sortVal(a, sortKey) - sortVal(b, sortKey);
+  });
+
+  const tb = document.getElementById('rows');
+  tb.innerHTML = groups.map(function (g) {
+    const pref = g.best.km <= 20000;
+    let html = '<tr class="' + (pref ? 'pref' : '') + '">' + adCells(g.best, true, g.ads.length) + '</tr>';
+    if (g.ads.length > 1 && openGroups[g.key]) {
+      html += g.ads.slice(1).map(function (d) {
+        return '<tr class="sub-row">' + adCells(d, false, 1) + '</tr>';
+      }).join('');
+    }
+    return html;
+  }).join('');
+
+  const gAll = makeGroups(matching);
+  document.getElementById('c-total').textContent = gAll.length;
+  document.getElementById('c-total-l').textContent = 'carros no filtro (' + matching.length + ' anúncios)';
+  document.getElementById('c-pref').textContent = makeGroups(matching.filter(function (d) { return d.km <= 20000; })).length;
+  document.getElementById('c-min').textContent = matching.length ? fmtPrice(Math.min.apply(null, matching.map(function (d) { return d.price; }))) : '—';
+  document.getElementById('c-minkm').textContent = matching.length ? fmtKm(Math.min.apply(null, matching.map(function (d) { return d.km; }))) : '—';
+  const pcts = matching.map(fipePct).filter(function (p) { return p !== null; });
+  document.getElementById('c-fipe').innerHTML = pcts.length ? fmtPct(Math.min.apply(null, pcts)) : '—';
+
+  renderFavoritos();
+  renderDiscarded();
+}
+
+document.querySelectorAll('.sort').forEach(function (b) {
+  b.addEventListener('click', function () {
+    document.querySelectorAll('.sort').forEach(function (x) { x.classList.remove('active'); });
+    b.classList.add('active'); sortKey = b.dataset.k; apply();
+  });
+});
+['f-uf', 'f-trim', 'f-cor', 'f-km'].forEach(function (id) {
+  document.getElementById(id).addEventListener('change', apply);
+});
+
+// preferir + descartar + abrir grupo (delegação no corpo da tabela)
+document.getElementById('rows').addEventListener('click', function (e) {
+  const grp = e.target.closest('.chip.grp');
+  if (grp) { const k = grp.dataset.g; openGroups[k] = !openGroups[k]; apply(); return; }
+  const star = e.target.closest('button.star');
+  if (star) { toggleFav(star.dataset.id); return; }
+  const btn = e.target.closest('button.act');
+  if (!btn) return;
+  discardAd(btn.dataset.id, btn.dataset.motivo);
+});
+
+// remover dos preferidos
+document.getElementById('fav-list').addEventListener('click', function (e) {
+  const btn = e.target.closest('button.act-unfav');
+  if (!btn) return;
+  toggleFav(btn.dataset.id);
+});
+
+// restaurar + abrir/fechar a seção de descartados
+document.getElementById('disc-list').addEventListener('click', function (e) {
+  const btn = e.target.closest('button.act-restore');
+  if (!btn) return;
+  restoreAd(btn.dataset.id);
+});
+document.getElementById('disc-toggle').addEventListener('click', function () {
+  const box = document.getElementById('disc-list');
+  box.hidden = !box.hidden;
+  document.getElementById('disc-toggle').classList.toggle('open', !box.hidden);
+});
+
+const dt = new Date(GENERATED_AT);
+document.getElementById('stamp').textContent = 'Última atualização: ' +
+  dt.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+document.getElementById('c-fipe-l').textContent = 'melhor preço vs FIPE ' + FIPE.ref;
+document.getElementById('foot-fipe').innerHTML = 'Referência FIPE <b>' + FIPE.ref + '</b> (' + FIPE.fonte + '): Advance 2024/25/26 = ' +
+  fmtPrice(FIPE['Advance-2024']) + ' / ' + fmtPrice(FIPE['Advance-2025']) + ' / ' + fmtPrice(FIPE['Advance-2026']) +
+  '; Touring = ' + fmtPrice(FIPE['Touring-2024']) + ' / ' + fmtPrice(FIPE['Touring-2025']) + ' / ' + fmtPrice(FIPE['Touring-2026']) +
+  '. O percentual compara o preço pedido com a FIPE do ano-modelo — é régua indicativa e não considera a quilometragem.';
+
+apply();
+</script>
+</body>
+</html>
