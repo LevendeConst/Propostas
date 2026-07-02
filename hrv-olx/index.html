@@ -3,134 +3,185 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101013">
 <title>Painel HR-V — OLX</title>
 <style>
-  :root { color-scheme: light; }
+  :root {
+    color-scheme: dark;
+    --bg: #101013; --srf: #17171c; --srf2: #1e1e24;
+    --line: rgba(255,255,255,.08); --line2: rgba(255,255,255,.14);
+    --tx: #ececf1; --tx2: #9b9ba6; --tx3: #6e6e78;
+    --roxo: #7c3aed; --roxo-h: #8b5cf6; --roxo-tx: #b195ff;
+    --verde: #34c77b; --verde-tx: #6ee7a0; --verde-tx2: #86d9a8;
+    --ambar: #f0b429; --ambar-tx: #f0c35e;
+    --verm-tx: #f28b88; --lar-tx: #f5a97f;
+  }
   * { box-sizing: border-box; }
   body {
-    margin: 0; background: #f5f6f8; color: #1d2129;
+    margin: 0; background: var(--bg); color: var(--tx);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 14px; line-height: 1.45;
   }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 20px 16px 48px; }
-  header h1 { font-size: 20px; margin: 0 0 4px; }
-  .sub { color: #5b6470; font-size: 13px; margin: 0 0 2px; }
-  .stamp { color: #8a929c; font-size: 12px; }
-  .cards { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 8px; }
-  .card { background: #fff; border: 1px solid #e6e8eb; border-radius: 10px; padding: 12px 14px; flex: 1 1 140px; }
-  .card .n { font-size: 22px; font-weight: 700; }
-  .card .l { font-size: 12px; color: #5b6470; }
-  .card .n small { font-size: 13px; font-weight: 600; color: #5b6470; }
-  .n.good { color: #1f7a36; }
-  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 14px 0 6px; }
-  .controls label { font-size: 12px; color: #5b6470; margin-right: 4px; }
-  select, button.sort {
-    font-size: 13px; padding: 6px 10px; border: 1px solid #d4d8dd; border-radius: 8px;
-    background: #fff; color: #1d2129; cursor: pointer;
+  .num { font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 22px 16px 48px; }
+  header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+  header h1 { font-size: 20px; margin: 0; font-weight: 700; }
+  header h1 .tag { color: var(--roxo-tx); font-weight: 600; font-size: 13px; margin-left: 4px; }
+  .sub { color: var(--tx2); font-size: 12px; margin: 4px 0 0; }
+  .stamp { color: var(--tx2); font-size: 12px; white-space: nowrap; }
+  .stamp .led { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--verde); margin-right: 6px; }
+  .stamp.warn .led { background: var(--ambar); }
+  .stamp.late .led { background: #f0605d; }
+  .hero-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 12px; margin-top: 16px; }
+  .hero { background: var(--srf); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; }
+  .hero-label { font-size: 11px; font-weight: 700; color: var(--verde-tx); letter-spacing: .8px; }
+  .hero-title { font-size: 16px; font-weight: 700; margin-top: 8px; }
+  .hero-sub { font-size: 12px; color: var(--tx2); margin-top: 2px; }
+  .hero-price-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+  .hero-price { font-size: 26px; font-weight: 800; }
+  .hero-pill { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+  .hero-pill.good { background: rgba(52,199,123,.12); border: 1px solid rgba(52,199,123,.3); color: var(--verde-tx); }
+  .hero-pill.neu { background: rgba(255,255,255,.06); border: 1px solid var(--line2); color: var(--tx2); }
+  .hero-pill.bad { background: rgba(245,169,127,.1); border: 1px solid rgba(245,169,127,.3); color: var(--lar-tx); }
+  .hero-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: auto; padding-top: 12px; }
+  .hero-fipe { font-size: 11px; color: var(--tx3); }
+  .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card { background: var(--srf); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .card .n { font-size: 21px; font-weight: 700; }
+  .card .n small { font-size: 13px; font-weight: 600; color: var(--tx2); }
+  .card .l { font-size: 11px; color: var(--tx2); margin-top: 1px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 16px 0 8px; }
+  .controls label { font-size: 12px; color: var(--tx2); margin-right: 4px; }
+  select {
+    font-size: 13px; padding: 6px 10px; border: 1px solid var(--line2); border-radius: 8px;
+    background: var(--srf); color: var(--tx); cursor: pointer;
   }
-  button.sort.active { background: #1d2129; color: #fff; border-color: #1d2129; }
-  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; margin-top: 8px; border: 1px solid #e6e8eb; }
-  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eef0f2; font-size: 13px; vertical-align: top; }
-  th { background: #fafbfc; color: #5b6470; font-weight: 600; font-size: 12px; }
+  .seg { margin-left: auto; display: flex; gap: 2px; background: var(--srf); border: 1px solid var(--line2); border-radius: 9px; padding: 2px; }
+  button.sort { font-size: 12px; font-weight: 600; padding: 5px 11px; border: none; border-radius: 7px; background: transparent; color: var(--tx2); cursor: pointer; }
+  button.sort:hover { color: var(--tx); }
+  button.sort.active { background: var(--roxo); color: #fff; }
+  table { width: 100%; border-collapse: collapse; background: var(--srf); border-radius: 12px; overflow: hidden; margin-top: 8px; border: 1px solid var(--line); }
+  th, td { text-align: left; padding: 12px 13px; border-bottom: 1px solid var(--line); font-size: 13px; vertical-align: middle; }
+  th { background: var(--srf2); color: var(--tx3); font-weight: 600; font-size: 11px; letter-spacing: .4px; position: sticky; top: 0; z-index: 2; }
+  th.r, td.r { text-align: right; }
   tr:last-child td { border-bottom: none; }
-  tr.pref { background: #f0f9f1; }
-  tr.pref td:first-child { box-shadow: inset 3px 0 0 #2e9c4a; }
-  tr.sub-row { background: #fafbfc; }
-  tr.sub-row td:first-child { padding-left: 26px; }
-  .trim { font-weight: 600; }
-  .badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px; margin-left: 6px; vertical-align: middle; }
-  .b-pref { background: #d8f0dd; color: #1f7a36; }
-  .b-new { background: #ffe7c2; color: #9a5b00; }
-  .b-off { background: #fde0e0; color: #a12a2a; }
-  .price { font-weight: 700; white-space: nowrap; }
-  .apartir { font-size: 11px; font-weight: 600; color: #8a929c; display: block; }
-  .km { white-space: nowrap; }
-  .cor { white-space: nowrap; }
-  .sw { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: middle; border: 1px solid rgba(0,0,0,.18); }
-  .meta { font-size: 11px; color: #8a929c; margin-top: 2px; }
+  tbody tr:nth-child(odd) { background: rgba(255,255,255,.015); }
+  tbody tr:hover { background: rgba(124,58,237,.07); }
+  tr.pref { box-shadow: inset 3px 0 0 var(--verde); background: rgba(52,199,123,.04); }
+  tr.sub-row { background: rgba(255,255,255,.03); }
+  tr.sub-row td:first-child { padding-left: 28px; }
+  .trim { font-weight: 700; }
+  .badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 6px; margin-left: 6px; vertical-align: 1px; }
+  .b-pref { background: rgba(52,199,123,.14); color: var(--verde-tx); }
+  .b-new { background: rgba(240,180,41,.14); color: var(--ambar-tx); }
+  .b-off { background: rgba(240,96,93,.15); color: var(--verm-tx); }
+  .price { font-weight: 700; font-size: 14px; white-space: nowrap; }
+  .apartir { font-size: 10px; font-weight: 600; color: var(--tx3); display: block; }
+  .km, .cor { white-space: nowrap; }
+  .sw { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; border: 1px solid rgba(255,255,255,.25); }
+  .meta { font-size: 11px; color: var(--tx3); margin-top: 2px; }
   .chip { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 6px; margin-top: 3px; white-space: nowrap; }
-  .chip.drop { background: #d8f0dd; color: #1f7a36; }
-  .chip.rise { background: #fdeaea; color: #a12a2a; }
-  .chip.grp { background: #eef0f2; color: #3a4048; cursor: pointer; border: 1px solid #d4d8dd; }
-  .chip.grp:hover { background: #e3e6ea; }
+  .chip.drop { background: rgba(52,199,123,.13); color: var(--verde-tx); }
+  .chip.rise { background: rgba(240,96,93,.13); color: var(--verm-tx); }
+  .chip.grp { background: rgba(124,58,237,.16); color: var(--roxo-tx); cursor: pointer; border: 1px solid rgba(124,58,237,.35); margin-left: 6px; margin-top: 0; }
+  .chip.grp:hover { background: rgba(124,58,237,.28); }
   .fx { font-weight: 700; white-space: nowrap; }
-  .fx-good { color: #1f7a36; }
-  .fx-mid { color: #4d9e63; }
-  .fx-neu { color: #5b6470; font-weight: 600; }
-  .fx-bad { color: #b3541e; }
-  .fxsub { font-size: 11px; color: #8a929c; margin-top: 2px; white-space: nowrap; }
-  a.ver { display: inline-block; padding: 5px 12px; background: #6a2c8f; color: #fff; text-decoration: none; border-radius: 7px; font-size: 12px; font-weight: 600; white-space: nowrap; }
-  a.ver:hover { background: #57247a; }
-  .acts { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-  button.act { font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 1px solid #d4d8dd; background: #fff; color: #5b6470; cursor: pointer; white-space: nowrap; }
-  button.act.sold:hover { background: #fff3e0; border-color: #e0a85b; color: #9a5b00; }
-  button.act.nope:hover { background: #f1f2f4; border-color: #c2c7cd; color: #3a4048; }
-  .foot { color: #8a929c; font-size: 12px; margin-top: 16px; line-height: 1.6; }
-  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: #5b6470; margin-top: 8px; }
-  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
+  .fx-good { color: var(--verde-tx); }
+  .fx-mid { color: var(--verde-tx2); }
+  .fx-neu { color: var(--tx2); font-weight: 600; }
+  .fx-bad { color: var(--lar-tx); }
+  .fxsub { font-size: 10px; color: var(--tx3); margin-top: 2px; white-space: nowrap; }
+  a.ver { display: inline-block; padding: 6px 13px; background: var(--roxo); color: #fff; text-decoration: none; border-radius: 8px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  a.ver:hover { background: var(--roxo-h); }
+  .acts { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+  button.act, button.star { font-size: 11px; font-weight: 600; padding: 5px 9px; border-radius: 7px; border: 1px solid var(--line2); background: transparent; color: var(--tx2); cursor: pointer; white-space: nowrap; }
+  button.star { color: var(--ambar-tx); border-color: rgba(240,180,41,.3); }
+  button.star:hover { background: rgba(240,180,41,.12); }
+  button.act.sold:hover { background: rgba(240,180,41,.1); border-color: rgba(240,180,41,.4); color: var(--ambar-tx); }
+  button.act.nope:hover { background: rgba(255,255,255,.06); color: var(--tx); }
+  .foot { color: var(--tx3); font-size: 12px; margin-top: 16px; line-height: 1.6; }
+  .foot b { color: var(--tx2); }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: var(--tx3); margin-top: 10px; }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
   .disc-wrap { margin-top: 20px; }
-  button.disc-toggle { font-size: 13px; font-weight: 600; padding: 9px 13px; border: 1px solid #e6e8eb; border-radius: 9px; background: #fff; color: #5b6470; cursor: pointer; width: 100%; text-align: left; }
-  button.disc-toggle:hover { background: #fafbfc; }
+  button.disc-toggle { font-size: 13px; font-weight: 600; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--srf); color: var(--tx2); cursor: pointer; width: 100%; text-align: left; }
+  button.disc-toggle:hover { background: var(--srf2); }
   button.disc-toggle .caret { float: right; transition: transform .15s; }
   button.disc-toggle.open .caret { transform: rotate(180deg); }
-  .disc-list { background: #fff; border: 1px solid #e6e8eb; border-top: none; border-radius: 0 0 9px 9px; }
-  .disc-item { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 9px 13px; border-bottom: 1px solid #eef0f2; font-size: 13px; color: #5b6470; }
+  .disc-list { background: var(--srf); border: 1px solid var(--line); border-top: none; border-radius: 0 0 10px 10px; }
+  .disc-item { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--tx2); }
   .disc-item:last-child { border-bottom: none; }
   .disc-info { flex: 1 1 320px; }
-  .disc-info b { color: #1d2129; }
-  .disc-motivo { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px; white-space: nowrap; }
-  .m-vendido { background: #ffe0c2; color: #9a5b00; }
-  .m-naoint { background: #e9ebee; color: #5b6470; }
-  a.ver-sm { color: #6a2c8f; font-weight: 600; text-decoration: none; font-size: 12px; white-space: nowrap; }
+  .disc-info b { color: var(--tx); }
+  .disc-motivo { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 6px; white-space: nowrap; }
+  .m-vendido { background: rgba(240,180,41,.14); color: var(--ambar-tx); }
+  .m-naoint { background: rgba(255,255,255,.07); color: var(--tx2); }
+  a.ver-sm { color: var(--roxo-tx); font-weight: 600; text-decoration: none; font-size: 12px; white-space: nowrap; }
   a.ver-sm:hover { text-decoration: underline; }
-  button.act-restore { font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 1px solid #d4d8dd; background: #fff; color: #1f7a36; cursor: pointer; white-space: nowrap; }
-  button.act-restore:hover { background: #f0f9f1; border-color: #2e9c4a; }
-  .disc-empty { padding: 12px 13px; color: #8a929c; font-size: 13px; }
-  .fav-wrap { margin: 16px 0 4px; border: 1px solid #f0d48a; background: #fffdf5; border-radius: 10px; overflow: hidden; }
-  .fav-head { padding: 10px 14px; font-weight: 700; font-size: 14px; color: #8a6d1a; background: #fdf6e3; border-bottom: 1px solid #f0d48a; }
-  .fav-count { font-weight: 600; color: #b08a2e; font-size: 12px; }
-  .fav-item { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 10px 14px; border-bottom: 1px solid #f3e7c4; font-size: 13px; }
+  button.act-restore { font-size: 11px; font-weight: 600; padding: 5px 9px; border-radius: 7px; border: 1px solid rgba(52,199,123,.35); background: transparent; color: var(--verde-tx); cursor: pointer; white-space: nowrap; }
+  button.act-restore:hover { background: rgba(52,199,123,.12); }
+  .disc-empty { padding: 12px 14px; color: var(--tx3); font-size: 13px; }
+  .fav-wrap { margin: 16px 0 4px; border: 1px solid rgba(240,180,41,.3); background: var(--srf); border-radius: 12px; overflow: hidden; }
+  .fav-head { padding: 10px 14px; font-weight: 700; font-size: 14px; color: var(--ambar-tx); background: rgba(240,180,41,.07); border-bottom: 1px solid rgba(240,180,41,.2); }
+  .fav-count { font-weight: 600; color: var(--tx2); font-size: 12px; }
+  .fav-item { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 13px; }
   .fav-item:last-child { border-bottom: none; }
-  .fav-star { color: #e6b422; font-size: 15px; }
-  .fav-info { flex: 1 1 320px; color: #5b6470; }
-  .fav-info b { color: #1d2129; }
-  button.star { font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 1px solid #ecd591; background: #fffdf5; color: #b08a2e; cursor: pointer; white-space: nowrap; }
-  button.star:hover { background: #fdf6e3; border-color: #e6b422; color: #8a6d1a; }
-  button.act-unfav { font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 1px solid #ecd591; background: #fff; color: #b08a2e; cursor: pointer; white-space: nowrap; }
-  button.act-unfav:hover { background: #fdf6e3; border-color: #e6b422; }
-  /* ---- celular: tabela vira cards ---- */
+  .fav-star { color: var(--ambar); font-size: 15px; }
+  .fav-info { flex: 1 1 320px; color: var(--tx2); }
+  .fav-info b { color: var(--tx); }
+  button.act-unfav { font-size: 11px; font-weight: 600; padding: 5px 9px; border-radius: 7px; border: 1px solid var(--line2); background: transparent; color: var(--tx2); cursor: pointer; white-space: nowrap; }
+  button.act-unfav:hover { background: rgba(255,255,255,.06); color: var(--tx); }
   @media (max-width: 700px) {
+    .hero-grid { grid-template-columns: 1fr; }
     table { display: block; background: transparent; border: none; }
     thead { display: none; }
     tbody { display: block; }
-    tr { display: block; background: #fff; border: 1px solid #e6e8eb; border-radius: 10px; margin-bottom: 10px; padding: 8px 12px; }
-    tr.pref { box-shadow: inset 3px 0 0 #2e9c4a; }
-    tr.pref td:first-child { box-shadow: none; }
-    tr.sub-row { margin: -4px 0 10px 14px; background: #fafbfc; }
+    tr { display: block; background: var(--srf); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; padding: 8px 12px; }
+    tbody tr:nth-child(odd) { background: var(--srf); }
+    tr.pref { box-shadow: inset 3px 0 0 var(--verde); }
+    tr.sub-row { margin: -4px 0 10px 14px; background: var(--srf2); }
     tr.sub-row td:first-child { padding-left: 2px; }
     td { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border: none; padding: 4px 2px; }
-    td::before { content: attr(data-l); color: #8a929c; font-size: 11px; font-weight: 600; flex: 0 0 auto; }
+    td.r { text-align: left; }
+    td::before { content: attr(data-l); color: var(--tx3); font-size: 11px; font-weight: 600; flex: 0 0 auto; }
     td[data-l=""]::before, td:first-child::before { display: none; }
-    td:first-child { display: block; border-bottom: 1px solid #eef0f2; padding-bottom: 6px; margin-bottom: 2px; }
-    td.c-acts { display: block; border-top: 1px solid #eef0f2; padding-top: 8px; margin-top: 2px; }
+    td:first-child { display: block; border-bottom: 1px solid var(--line); padding-bottom: 6px; margin-bottom: 2px; }
+    td.c-acts { display: block; border-top: 1px solid var(--line); padding-top: 8px; margin-top: 2px; }
     td .fxsub { margin-top: 0; }
+    .acts { justify-content: flex-start; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Honda HR-V — busca OLX</h1>
-    <p class="sub">Advance ou Touring • 2024 a 2026 • até 50 mil km • R$ 130 mil a R$ 180 mil • AL, PE e SE</p>
-    <p class="stamp" id="stamp"></p>
+    <div>
+      <h1>Honda HR-V<span class="tag">busca OLX</span></h1>
+      <p class="sub">Advance ou Touring • 2024 a 2026 • até 50 mil km • R$ 130 mil a R$ 180 mil • AL, PE e SE</p>
+    </div>
+    <p class="stamp" id="stamp"><span class="led"></span><span id="stamp-tx"></span></p>
   </header>
 
-  <div class="cards">
-    <div class="card"><div class="n" id="c-total">0</div><div class="l" id="c-total-l">carros no filtro</div></div>
-    <div class="card"><div class="n" id="c-pref">0</div><div class="l">até 20 mil km</div></div>
-    <div class="card"><div class="n" id="c-min">—</div><div class="l">menor preço</div></div>
-    <div class="card"><div class="n" id="c-minkm">—</div><div class="l">menor km</div></div>
-    <div class="card"><div class="n good" id="c-fipe">—</div><div class="l" id="c-fipe-l">melhor preço vs FIPE</div></div>
+  <div class="hero-grid">
+    <div class="hero" id="hero">
+      <div class="hero-label" id="hero-label">MELHOR NEGÓCIO HOJE</div>
+      <div class="hero-title" id="hero-title">—</div>
+      <div class="hero-sub" id="hero-sub"></div>
+      <div class="hero-price-row">
+        <div class="hero-price num" id="hero-price"></div>
+        <div class="hero-pill good" id="hero-pill" hidden></div>
+      </div>
+      <div class="hero-foot">
+        <span class="hero-fipe" id="hero-fipe"></span>
+        <a class="ver" id="hero-link" href="#" target="_blank" rel="noopener" hidden>Ver no OLX</a>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="card"><div class="n num" id="c-total">0</div><div class="l" id="c-total-l">carros no filtro</div></div>
+      <div class="card"><div class="n num" id="c-pref">0</div><div class="l">carros até 20 mil km</div></div>
+      <div class="card"><div class="n num" id="c-min">—</div><div class="l">menor preço</div></div>
+      <div class="card"><div class="n num" id="c-minkm">—</div><div class="l">menor km</div></div>
+    </div>
   </div>
 
   <div class="fav-wrap" id="fav-wrap" hidden>
@@ -151,8 +202,7 @@
     <span><label>KM</label>
       <select id="f-km"><option value="">Até 50 mil</option><option value="20000">Até 20 mil (preferência)</option></select>
     </span>
-    <span style="margin-left:auto">
-      <label>Ordenar</label>
+    <span class="seg">
       <button class="sort active" data-k="km">KM</button>
       <button class="sort" data-k="price">Preço</button>
       <button class="sort" data-k="year">Ano</button>
@@ -161,15 +211,15 @@
   </div>
 
   <table>
-    <thead><tr><th>Versão / Ano</th><th>KM</th><th>Cor</th><th>Preço</th><th>vs FIPE</th><th>Local</th><th></th></tr></thead>
+    <thead><tr><th>VERSÃO / ANO</th><th>KM</th><th>COR</th><th>LOCAL</th><th class="r">VS FIPE</th><th class="r">PREÇO</th><th></th></tr></thead>
     <tbody id="rows"></tbody>
   </table>
 
   <div class="legend">
-    <span><span class="dot" style="background:#2e9c4a"></span>Preferência: até 20 mil km</span>
-    <span><span class="dot" style="background:#ffe7c2"></span>Novo (entrou há menos de 2 dias)</span>
-    <span><span class="dot" style="background:#d8f0dd"></span>&#8595; preço baixou desde a rodada anterior</span>
-    <span><span class="dot" style="background:#eef0f2"></span>+N anúncios: mesmo carro em mais de um anúncio (toque para abrir)</span>
+    <span><span class="dot" style="background:var(--verde)"></span>até 20 mil km (preferência)</span>
+    <span><span class="dot" style="background:var(--ambar)"></span>novo: entrou há menos de 2 dias</span>
+    <span style="color:var(--verde-tx)">&#8595; verde = queda de preço e desconto vs FIPE</span>
+    <span style="color:var(--roxo-tx)">+N anúncios = mesmo carro em outros anúncios (toque para abrir)</span>
   </div>
 
   <div class="disc-wrap">
@@ -183,7 +233,7 @@
     <span id="foot-fipe"></span><br>
     Anúncios com a mesma versão, ano, km e cor são tratados como o mesmo carro (revendedores diferentes) e aparecem agrupados: o preço mostrado é o menor, e "+N anúncios" abre os demais.<br>
     "No painel há N dias" conta a partir de 02/07/2026 (início do histórico); anúncios que já estavam no painel antes dessa data ficam sem contagem. A queda de preço compara com o último preço registrado pela rotina.<br>
-    Marque um anúncio como <b>Preferido</b> para destacá-lo no topo; descarte (vendido ou sem interesse) para escondê-lo. As marcações ficam salvas neste navegador e são reaplicadas a cada atualização. Preferido que sair do OLX ganha o aviso <b>fora do ar</b>.
+    Marque um anúncio como <b>Preferido</b> (&#9734;) para destacá-lo no topo; <b>Vendido</b> e <b>Dispensar</b> escondem o anúncio (ficam na seção Descartados, com restauro). As marcações ficam salvas neste navegador e são reaplicadas a cada atualização. Preferido que sair do OLX ganha o aviso <b>fora do ar</b>.
   </p>
 </div>
 
@@ -231,7 +281,7 @@ const DATA = [
 const fmtPrice = v => 'R$ ' + v.toLocaleString('pt-BR');
 const fmtKm = v => v.toLocaleString('pt-BR') + ' km';
 const corCell = c => {
-  if (!c) return '<span style="color:#8a929c">&mdash;</span>';
+  if (!c) return '<span style="color:var(--tx3)">&mdash;</span>';
   const hex = COLORS[c] || '#cccccc';
   return '<span class="sw" style="background:' + hex + '"></span>' + c;
 };
@@ -259,16 +309,16 @@ function fmtPct(p) {
 }
 function fipeCell(d) {
   const p = fipePct(d);
-  if (p === null) return '<span style="color:#8a929c">&mdash;</span>';
+  if (p === null) return '<span style="color:var(--tx3)">&mdash;</span>';
   const cls = p <= -10 ? 'fx-good' : (p <= -4 ? 'fx-mid' : (p <= 0 ? 'fx-neu' : 'fx-bad'));
-  return '<div class="fx ' + cls + '">' + fmtPct(p) + '</div><div class="fxsub">FIPE ' + fmtPrice(fipeOf(d)) + '</div>';
+  return '<div class="fx num ' + cls + '">' + fmtPct(p) + '</div><div class="fxsub num">FIPE ' + fmtPrice(fipeOf(d)) + '</div>';
 }
 function dropChip(d) {
   if (d.prev == null || d.prev === d.price) return '';
   const diff = d.prev - d.price;
   const dt = d.prevD ? ' em ' + d.prevD.slice(8, 10) + '/' + d.prevD.slice(5, 7) : '';
-  if (diff > 0) return '<span class="chip drop" title="Preço anterior: ' + fmtPrice(d.prev) + '">&#8595; ' + fmtPrice(diff) + dt + '</span>';
-  return '<span class="chip rise" title="Preço anterior: ' + fmtPrice(d.prev) + '">&#8593; ' + fmtPrice(-diff) + dt + '</span>';
+  if (diff > 0) return '<span class="chip drop num" title="Preço anterior: ' + fmtPrice(d.prev) + '">&#8595; ' + fmtPrice(diff) + dt + '</span>';
+  return '<span class="chip rise num" title="Preço anterior: ' + fmtPrice(d.prev) + '">&#8593; ' + fmtPrice(-diff) + dt + '</span>';
 }
 
 // ---- Descarte (salvo neste navegador) ----
@@ -384,7 +434,7 @@ function renderFavoritos() {
     const prTxt = d.price != null ? fmtPrice(d.price) : '—';
     const offBadge = d.off ? ' <span class="badge b-off" title="Este anúncio não apareceu na última busca — pode ter sido vendido ou retirado.">fora do ar</span>' : '';
     const extra = d.d ? (dropChip(d.d) ? ' ' + dropChip(d.d) : '') : '';
-    const info = '<b>HR-V ' + d.trim + ' ' + d.year + '</b>' + offBadge + ' &bull; ' + kmTxt + ' &bull; ' + corCell(d.cor) + ' &bull; <span class="price">' + prTxt + '</span>' + extra + ' &bull; ' + d.local + ' (' + d.uf + ')';
+    const info = '<b>HR-V ' + d.trim + ' ' + d.year + '</b>' + offBadge + ' &bull; ' + kmTxt + ' &bull; ' + corCell(d.cor) + ' &bull; <span class="price num">' + prTxt + '</span>' + extra + ' &bull; ' + d.local + ' (' + d.uf + ')';
     const link = d.url ? '<a class="ver" href="' + escAttr(d.url) + '" target="_blank" rel="noopener">Ver no OLX</a>' : '';
     return '<div class="fav-item">' +
       '<span class="fav-star">&#9733;</span>' +
@@ -438,20 +488,51 @@ function adCells(d, isGroupBest, groupSize) {
       '<span class="trim">HR-V ' + d.trim + '</span> ' + d.year + badges + grpChip +
       (dias ? '<div class="meta">' + dias + '</div>' : '') +
     '</td>' +
-    '<td class="km" data-l="KM">' + fmtKm(d.km) + '</td>' +
+    '<td class="km num" data-l="KM">' + fmtKm(d.km) + '</td>' +
     '<td class="cor" data-l="Cor">' + corCell(d.cor) + '</td>' +
-    '<td data-l="Preço"><span class="price">' + fmtPrice(d.price) + '</span>' +
+    '<td data-l="Local">' + d.local + ' <span style="color:var(--tx3)">(' + d.uf + ')</span></td>' +
+    '<td class="r" data-l="vs FIPE">' + fipeCell(d) + '</td>' +
+    '<td class="r" data-l="Preço"><span class="price num">' + fmtPrice(d.price) + '</span>' +
       (groupSize > 1 && isGroupBest ? '<span class="apartir">menor dos ' + groupSize + ' anúncios</span>' : '') +
       (drop ? '<div>' + drop + '</div>' : '') +
     '</td>' +
-    '<td data-l="vs FIPE">' + fipeCell(d) + '</td>' +
-    '<td data-l="Local">' + d.local + ' <span style="color:#8a929c">(' + d.uf + ')</span></td>' +
     '<td class="c-acts" data-l=""><div class="acts">' +
-      '<a class="ver" href="' + escAttr(d.url) + '" target="_blank" rel="noopener">Ver no OLX</a>' +
-      '<button class="star" data-id="' + id + '" title="Marcar como preferido">&#9734; Preferir</button>' +
-      '<button class="act sold" data-id="' + id + '" data-motivo="vendido" title="Marcar como já vendido">Vendido</button>' +
-      '<button class="act nope" data-id="' + id + '" data-motivo="naoint" title="Não tenho interesse">Não me interessa</button>' +
+      '<a class="ver" href="' + escAttr(d.url) + '" target="_blank" rel="noopener">Ver</a>' +
+      '<button class="star" data-id="' + id + '" title="Marcar como preferido">&#9734;</button>' +
+      '<button class="act sold" data-id="' + id + '" data-motivo="vendido" title="Esconder: já foi vendido">Vendido</button>' +
+      '<button class="act nope" data-id="' + id + '" data-motivo="naoint" title="Esconder: não me interessa">Dispensar</button>' +
     '</div></td>';
+}
+
+function renderHero(matching) {
+  const hero = document.getElementById('hero');
+  if (!matching.length) { hero.hidden = true; return; }
+  hero.hidden = false;
+  const comFipe = matching.filter(function (d) { return fipePct(d) !== null; });
+  let best, label;
+  if (comFipe.length) {
+    best = comFipe.slice().sort(function (a, b) { return fipePct(a) - fipePct(b) || a.price - b.price; })[0];
+    label = 'MELHOR NEGÓCIO HOJE';
+  } else {
+    best = matching.slice().sort(function (a, b) { return a.price - b.price; })[0];
+    label = 'MENOR PREÇO HOJE';
+  }
+  const badges = (best.km <= 20000 ? '<span class="badge b-pref">&le;20 mil km</span>' : '')
+    + (isNewAd(best) ? '<span class="badge b-new">novo</span>' : '');
+  document.getElementById('hero-label').textContent = label;
+  document.getElementById('hero-title').innerHTML = 'HR-V ' + best.trim + ' ' + best.year + badges;
+  document.getElementById('hero-sub').innerHTML = corCell(best.cor) + ' · ' + fmtKm(best.km) + ' · ' + best.local + ' (' + best.uf + ')' + (dropChip(best) ? ' ' + dropChip(best) : '');
+  document.getElementById('hero-price').textContent = fmtPrice(best.price);
+  const pill = document.getElementById('hero-pill');
+  const p = fipePct(best);
+  if (p === null) { pill.hidden = true; } else {
+    pill.hidden = false;
+    pill.className = 'hero-pill ' + (p <= -4 ? 'good' : (p <= 0 ? 'neu' : 'bad'));
+    pill.innerHTML = fmtPct(p) + ' vs FIPE';
+  }
+  document.getElementById('hero-fipe').textContent = p === null ? '' : 'FIPE ' + FIPE.ref + ': ' + fmtPrice(fipeOf(best));
+  const link = document.getElementById('hero-link');
+  link.hidden = false; link.href = best.url;
 }
 
 function apply() {
@@ -490,9 +571,8 @@ function apply() {
   document.getElementById('c-pref').textContent = makeGroups(matching.filter(function (d) { return d.km <= 20000; })).length;
   document.getElementById('c-min').textContent = matching.length ? fmtPrice(Math.min.apply(null, matching.map(function (d) { return d.price; }))) : '—';
   document.getElementById('c-minkm').textContent = matching.length ? fmtKm(Math.min.apply(null, matching.map(function (d) { return d.km; }))) : '—';
-  const pcts = matching.map(fipePct).filter(function (p) { return p !== null; });
-  document.getElementById('c-fipe').innerHTML = pcts.length ? fmtPct(Math.min.apply(null, pcts)) : '—';
 
+  renderHero(matching);
   renderFavoritos();
   renderDiscarded();
 }
@@ -537,14 +617,21 @@ document.getElementById('disc-toggle').addEventListener('click', function () {
   document.getElementById('disc-toggle').classList.toggle('open', !box.hidden);
 });
 
-const dt = new Date(GENERATED_AT);
-document.getElementById('stamp').textContent = 'Última atualização: ' +
-  dt.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-document.getElementById('c-fipe-l').textContent = 'melhor preço vs FIPE ' + FIPE.ref;
+// carimbo + semáforo de frescor
+(function () {
+  const dt = new Date(GENERATED_AT);
+  const idadeDias = (Date.now() - dt.getTime()) / 86400000;
+  const stamp = document.getElementById('stamp');
+  if (idadeDias >= 2.5) stamp.className = 'stamp late';
+  else if (idadeDias >= 1.5) stamp.className = 'stamp warn';
+  document.getElementById('stamp-tx').textContent = 'atualizado ' +
+    dt.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) +
+    (idadeDias >= 1.5 ? ' (desatualizado)' : '');
+})();
 document.getElementById('foot-fipe').innerHTML = 'Referência FIPE <b>' + FIPE.ref + '</b> (' + FIPE.fonte + '): Advance 2024/25/26 = ' +
   fmtPrice(FIPE['Advance-2024']) + ' / ' + fmtPrice(FIPE['Advance-2025']) + ' / ' + fmtPrice(FIPE['Advance-2026']) +
   '; Touring = ' + fmtPrice(FIPE['Touring-2024']) + ' / ' + fmtPrice(FIPE['Touring-2025']) + ' / ' + fmtPrice(FIPE['Touring-2026']) +
-  '. O percentual compara o preço pedido com a FIPE do ano-modelo — é régua indicativa e não considera a quilometragem.';
+  '. O percentual compara o preço pedido com a FIPE do ano-modelo: é régua indicativa e não considera a quilometragem.';
 
 apply();
 </script>
